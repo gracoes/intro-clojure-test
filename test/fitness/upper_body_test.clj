@@ -9,8 +9,16 @@
     (is (<= (:seconds results) (* 4 60)))))
 
 (deftest pull-up-test
-  (let [results (pull-ups 10)]
-    (is (= (:actual-reps results) 10))
-    (is (< (:seconds results) 60))))
+  (let [{:keys [actual-reps seconds]} (pull-ups 10)]
+    (is (= actual-reps 10))
+    (is (< seconds 60))))
+
+(deftest bench-press-too-heavy-test
+  (is (thrown? fitness.safety.UnsafeResistanceException (bench-presses 300 10))))
+
+(deftest bench-press-test
+  (let [{actual-reps :actual-reps seconds :seconds} (bench-presses 100 20)]
+    (is (= actual-reps 20))
+    (is (<= seconds 60))))
 
 (run-tests)
